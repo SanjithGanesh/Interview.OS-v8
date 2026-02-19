@@ -1,0 +1,606 @@
+@import "tailwindcss" source(none);
+
+/* Scan widget source files for Tailwind classes */
+@source "./**/*.{js,ts,jsx,tsx}";
+/* Scan SDK and chat package source for their Tailwind classes */
+@source "../node_modules/@spaces/sdk/src/**/*.{js,ts,jsx,tsx}";
+@source "../node_modules/@miyagi/chat/src/**/*.{js,ts,jsx,tsx}";
+
+/*
+ * Theme configuration (replaces tailwind.config.js)
+ * Each widget can customize these values.
+ */
+@theme {
+  /* ── Clean Light UI Theme ───────────────────────────────────────────────── */
+
+  /* Surfaces (backgrounds) */
+  --color-surface: #ffffff;
+  --color-surface-elevated: #fafafa;
+  --color-surface-overlay: #f5f5f7;
+  --color-surface-input: #ffffff;
+
+  /* Text */
+  --color-content: #111111;
+  --color-content-secondary: #5c5c6a;
+  --color-content-muted: #9999aa;
+  --color-content-inverse: #ffffff;
+
+  /* Borders - extremely subtle */
+  --color-border: #ebebeb;
+  --color-border-strong: #d8d8e0;
+  --color-border-focus: rgba(99, 102, 241, 0.35);
+
+  /* Primary accent - vibrant indigo */
+  --color-primary: #6366f1;
+  --color-primary-hover: #4f46e5;
+  --color-primary-muted: rgba(99, 102, 241, 0.08);
+  --color-primary-border: rgba(99, 102, 241, 0.18);
+
+  /* Status colors */
+  --color-success: #10b981;
+  --color-success-muted: rgba(16, 185, 129, 0.08);
+  --color-success-border: rgba(16, 185, 129, 0.18);
+
+  --color-warning: #f59e0b;
+  --color-warning-muted: rgba(245, 158, 11, 0.08);
+  --color-warning-border: rgba(245, 158, 11, 0.18);
+
+  --color-danger: #ef4444;
+  --color-danger-muted: rgba(239, 68, 68, 0.08);
+  --color-danger-border: rgba(239, 68, 68, 0.18);
+
+  --color-info: #3b82f6;
+  --color-info-muted: rgba(59, 130, 246, 0.08);
+  --color-info-border: rgba(59, 130, 246, 0.18);
+
+  /* Nav feature identity colors (light mode) */
+  --color-nav-today: #6366f1;
+  --color-nav-today-bg: rgba(99, 102, 241, 0.07);
+  --color-nav-pipeline: #8b5cf6;
+  --color-nav-pipeline-bg: rgba(139, 92, 246, 0.07);
+  --color-nav-prep: #0891b2;
+  --color-nav-prep-bg: rgba(8, 145, 178, 0.07);
+  --color-nav-usage: #059669;
+  --color-nav-usage-bg: rgba(5, 150, 105, 0.07);
+  --color-nav-feedback: #d97706;
+  --color-nav-feedback-bg: rgba(217, 119, 6, 0.07);
+  --color-nav-analytics: #7c3aed;
+  --color-nav-analytics-bg: rgba(124, 58, 237, 0.07);
+
+  /* Legacy colors (for chat components) */
+  --color-chat-bg: #ffffff;
+  --color-chat-user: #f9fafb;
+  --color-chat-ai: #f9fafb;
+  --color-border-light: #ebebeb;
+  --color-text-primary: #111111;
+  --color-text-secondary: #5c5c6a;
+  --color-accent: #6366f1;
+  --color-accent-hover: #4f46e5;
+
+  /* Shadows - large, diffuse, very transparent */
+  --shadow-glow-violet: 0 0 40px rgba(99, 102, 241, 0.10);
+  --shadow-glow-cyan: 0 0 40px rgba(6, 182, 212, 0.10);
+  --shadow-glow-emerald: 0 0 40px rgba(16, 185, 129, 0.10);
+  --shadow-glow-amber: 0 0 40px rgba(245, 158, 11, 0.10);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 6px 16px rgba(0, 0, 0, 0.05);
+  --shadow-card-hover: 0 4px 8px rgba(0, 0, 0, 0.06), 0 14px 28px rgba(0, 0, 0, 0.08);
+  --shadow-hero: 0 10px 40px rgba(99, 102, 241, 0.20);
+  --shadow-nav-active: 0 2px 12px rgba(99, 102, 241, 0.20);
+
+  /* Animations */
+  --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+}
+
+/*
+ * Custom base styles — must be in @layer base so utility classes can override.
+ */
+@layer base {
+  html, body, #root {
+    min-height: 100vh;
+    background-color: var(--color-surface);
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 15px;
+    color: var(--color-content);
+  }
+
+  /* Scrollbar styling - minimal */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: var(--color-border-strong);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-content-muted);
+  }
+
+  /* Selection styling */
+  ::selection {
+    background-color: var(--color-primary-muted);
+    color: var(--color-content);
+  }
+
+  /* Focus states for accessibility */
+  *:focus-visible {
+    outline-style: solid;
+    outline-width: 2px;
+    outline-offset: 2px;
+    outline-color: var(--color-primary);
+  }
+
+  /* Clean gradient utility */
+  .gradient-hero {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+  }
+
+  /* ── Card micro-interaction ─────────────────────────────────────────────── */
+  .card-hover {
+    transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+  }
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  /* ── Today section cards: accent glow on hover in dark mode ─────────────── */
+  .today-card-danger:hover {
+    box-shadow: var(--shadow-card-hover), 0 0 0 1px rgba(248, 113, 113, 0.15);
+  }
+  .today-card-warning:hover {
+    box-shadow: var(--shadow-card-hover), 0 0 0 1px rgba(251, 191, 36, 0.15);
+  }
+  .today-card-info:hover {
+    box-shadow: var(--shadow-card-hover), 0 0 0 1px rgba(96, 165, 250, 0.15);
+  }
+  .today-card-success:hover {
+    box-shadow: var(--shadow-card-hover), 0 0 0 1px rgba(52, 211, 153, 0.15);
+  }
+
+  /* ── Empty state glow ring ───────────────────────────────────────────────── */
+  .empty-icon-ring {
+    position: relative;
+  }
+  .empty-icon-ring::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 300ms ease;
+  }
+  .empty-icon-ring:hover::after {
+    opacity: 1;
+  }
+
+  /* ── Button micro-interaction ───────────────────────────────────────────── */
+  .btn-lift {
+    transition: transform 150ms ease, box-shadow 150ms ease;
+  }
+  .btn-lift:hover {
+    transform: scale(1.01);
+  }
+  .btn-lift:active {
+    transform: scale(0.99);
+  }
+
+  /* ── Nav pill highlight ─────────────────────────────────────────────────── */
+  .nav-item {
+    position: relative;
+    transition: color 150ms ease, background-color 150ms ease;
+  }
+  .nav-item::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 60%;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    transition: transform 200ms ease;
+    opacity: 0.5;
+  }
+  .nav-item.active::after {
+    transform: translateX(-50%) scaleX(1);
+  }
+
+  /* ── Section accent bar ─────────────────────────────────────────────────── */
+  .section-header-accent {
+    border-left: 3px solid currentColor;
+    padding-left: 10px;
+  }
+
+  /* ── Empty state card ───────────────────────────────────────────────────── */
+  .empty-card {
+    background: linear-gradient(145deg, var(--color-surface-elevated), var(--color-surface));
+    border: 1.5px dashed var(--color-border-strong);
+  }
+
+  /* ── Count chip ─────────────────────────────────────────────────────────── */
+  .count-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 7px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.01em;
+  }
+
+  /* ── Badge glow on hover ────────────────────────────────────────────────── */
+  .badge-hover {
+    transition: box-shadow 150ms ease;
+  }
+  .badge-hover:hover {
+    box-shadow: 0 0 8px currentColor;
+    opacity: 0.9;
+  }
+
+  /* ── Timer pill ─────────────────────────────────────────────────────────── */
+  .timer-pill {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Priority badge gradient ────────────────────────────────────────────── */
+  .priority-high {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(239, 68, 68, 0.06));
+    border-color: rgba(239, 68, 68, 0.2);
+    color: #dc2626;
+  }
+  .priority-medium {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(245, 158, 11, 0.06));
+    border-color: rgba(245, 158, 11, 0.2);
+    color: #b45309;
+  }
+  .priority-low {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(16, 185, 129, 0.06));
+    border-color: rgba(16, 185, 129, 0.2);
+    color: #047857;
+  }
+
+  /* ── Quick Picks chip backgrounds ──────────────────────────────────────── */
+  .chip-unselected {
+    background-color: var(--color-surface-overlay);
+    border-color: var(--color-border-strong);
+    color: var(--color-content-secondary);
+  }
+  .chip-selected {
+    background-color: var(--color-primary-muted);
+    border-color: var(--color-primary-border);
+    color: var(--color-primary);
+  }
+
+  /* ── Dark Mode ─────────────────────────────────────────────────────────── */
+  /* Applied when <html data-theme="dark"> is set */
+
+  [data-theme="dark"] {
+    /* Surfaces — rich, layered, NOT flat black */
+    --color-surface: #0f0f13;
+    --color-surface-elevated: #17171d;
+    --color-surface-overlay: #20202a;
+    --color-surface-input: #17171d;
+
+    /* Text */
+    --color-content: #ededf0;
+    --color-content-secondary: #9898a8;
+    --color-content-muted: #5e5e70;
+    --color-content-inverse: #0f0f13;
+
+    /* Borders — slightly warmer */
+    --color-border: #25252f;
+    --color-border-strong: #33333f;
+    --color-border-focus: rgba(129, 140, 248, 0.45);
+
+    /* Primary — more vibrant in dark */
+    --color-primary: #818cf8;
+    --color-primary-hover: #6366f1;
+    --color-primary-muted: rgba(129, 140, 248, 0.12);
+    --color-primary-border: rgba(129, 140, 248, 0.28);
+
+    /* Status colors — softer glow */
+    --color-success: #34d399;
+    --color-success-muted: rgba(52, 211, 153, 0.10);
+    --color-success-border: rgba(52, 211, 153, 0.22);
+
+    --color-warning: #fbbf24;
+    --color-warning-muted: rgba(251, 191, 36, 0.10);
+    --color-warning-border: rgba(251, 191, 36, 0.22);
+
+    --color-danger: #f87171;
+    --color-danger-muted: rgba(248, 113, 113, 0.10);
+    --color-danger-border: rgba(248, 113, 113, 0.22);
+
+    --color-info: #60a5fa;
+    --color-info-muted: rgba(96, 165, 250, 0.10);
+    --color-info-border: rgba(96, 165, 250, 0.22);
+
+    /* Nav feature identity colors (dark mode — brighter, more visible) */
+    --color-nav-today: #818cf8;
+    --color-nav-today-bg: rgba(129, 140, 248, 0.12);
+    --color-nav-pipeline: #a78bfa;
+    --color-nav-pipeline-bg: rgba(167, 139, 250, 0.12);
+    --color-nav-prep: #22d3ee;
+    --color-nav-prep-bg: rgba(34, 211, 238, 0.10);
+    --color-nav-usage: #34d399;
+    --color-nav-usage-bg: rgba(52, 211, 153, 0.10);
+    --color-nav-feedback: #fbbf24;
+    --color-nav-feedback-bg: rgba(251, 191, 36, 0.10);
+    --color-nav-analytics: #c084fc;
+    --color-nav-analytics-bg: rgba(192, 132, 252, 0.10);
+
+    /* Legacy / chat */
+    --color-chat-bg: #17171d;
+    --color-chat-user: #20202a;
+    --color-chat-ai: #20202a;
+    --color-border-light: #25252f;
+    --color-text-primary: #ededf0;
+    --color-text-secondary: #9898a8;
+    --color-accent: #818cf8;
+    --color-accent-hover: #6366f1;
+
+    /* Shadows — deeper in dark */
+    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.35), 0 6px 16px rgba(0, 0, 0, 0.28);
+    --shadow-card-hover: 0 4px 8px rgba(0, 0, 0, 0.40), 0 16px 32px rgba(0, 0, 0, 0.35);
+    --shadow-hero: 0 10px 40px rgba(99, 102, 241, 0.30);
+    --shadow-nav-active: 0 2px 12px rgba(129, 140, 248, 0.30);
+
+    /* Empty card style in dark mode */
+    --color-empty-card-gradient-start: #17171d;
+    --color-empty-card-gradient-end: #13131a;
+  }
+
+  /* Dark mode: override specific utility classes that use hardcoded colors */
+  [data-theme="dark"] .bg-white { background-color: var(--color-surface-elevated) !important; }
+  [data-theme="dark"] .bg-gray-50 { background-color: var(--color-surface-overlay) !important; }
+  [data-theme="dark"] .bg-gray-100 { background-color: var(--color-surface-overlay) !important; }
+  [data-theme="dark"] .text-gray-900 { color: var(--color-content) !important; }
+  [data-theme="dark"] .text-gray-700 { color: var(--color-content-secondary) !important; }
+  [data-theme="dark"] .text-gray-600 { color: var(--color-content-secondary) !important; }
+  [data-theme="dark"] .text-gray-500 { color: var(--color-content-muted) !important; }
+  [data-theme="dark"] .text-gray-400 { color: var(--color-content-muted) !important; }
+  [data-theme="dark"] .text-gray-300 { color: var(--color-border-strong) !important; }
+  [data-theme="dark"] .border-\[#f0f0f0\] { border-color: var(--color-border) !important; }
+  [data-theme="dark"] .border-\[#ebebeb\] { border-color: var(--color-border) !important; }
+  [data-theme="dark"] .shadow-\[0_8px_30px_rgb\(0\,0\,0\,0\.04\)\] { box-shadow: var(--shadow-card) !important; }
+  [data-theme="dark"] .shadow-\[0_12px_40px_rgb\(0\,0\,0\,0\.08\)\] { box-shadow: var(--shadow-card-hover) !important; }
+  [data-theme="dark"] .divide-\[#f0f0f0\] > * + * { border-color: var(--color-border) !important; }
+
+  /* Dark mode: amber offer section */
+  [data-theme="dark"] .bg-amber-50 { background-color: rgba(251, 191, 36, 0.06) !important; }
+  [data-theme="dark"] .border-amber-200 { border-color: rgba(251, 191, 36, 0.20) !important; }
+  [data-theme="dark"] .border-amber-100 { border-color: rgba(251, 191, 36, 0.12) !important; }
+  [data-theme="dark"] .text-amber-900 { color: #fbbf24 !important; }
+  [data-theme="dark"] .text-amber-800 { color: #fbbf24 !important; }
+  [data-theme="dark"] .text-amber-700 { color: #fbbf24 !important; }
+  [data-theme="dark"] .text-amber-600 { color: #fbbf24 !important; }
+  [data-theme="dark"] .bg-amber-100 { background-color: rgba(251, 191, 36, 0.12) !important; }
+  [data-theme="dark"] .bg-amber-200 { background-color: rgba(251, 191, 36, 0.18) !important; }
+  [data-theme="dark"] .bg-amber-400 { background-color: #d97706 !important; }
+  [data-theme="dark"] .bg-amber-500 { background-color: #b45309 !important; }
+  [data-theme="dark"] .hover\:bg-amber-600:hover { background-color: #92400e !important; }
+  [data-theme="dark"] .border-amber-300 { border-color: rgba(251, 191, 36, 0.25) !important; }
+
+  /* Dark mode: pipeline stage column backgrounds */
+  [data-theme="dark"] .bg-purple-50 { background-color: rgba(139, 92, 246, 0.08) !important; }
+  [data-theme="dark"] .border-purple-200 { border-color: rgba(139, 92, 246, 0.20) !important; }
+  [data-theme="dark"] .bg-purple-500 { background-color: #7c3aed !important; }
+  [data-theme="dark"] .bg-blue-50 { background-color: rgba(59, 130, 246, 0.08) !important; }
+  [data-theme="dark"] .border-blue-200 { border-color: rgba(59, 130, 246, 0.20) !important; }
+  [data-theme="dark"] .bg-blue-500 { background-color: #2563eb !important; }
+  [data-theme="dark"] .bg-green-50 { background-color: rgba(16, 185, 129, 0.08) !important; }
+  [data-theme="dark"] .border-green-200 { border-color: rgba(16, 185, 129, 0.20) !important; }
+  [data-theme="dark"] .bg-green-500 { background-color: #059669 !important; }
+  [data-theme="dark"] .bg-gray-400 { background-color: #4b5563 !important; }
+  [data-theme="dark"] .border-gray-200 { border-color: rgba(255, 255, 255, 0.08) !important; }
+
+  /* Dark mode: red/danger section */
+  [data-theme="dark"] .bg-red-50 { background-color: rgba(248, 113, 113, 0.08) !important; }
+  [data-theme="dark"] .text-red-700 { color: #f87171 !important; }
+
+  /* Dark mode: green/success section */
+  [data-theme="dark"] .bg-green-100 { background-color: rgba(52, 211, 153, 0.10) !important; }
+  [data-theme="dark"] .text-green-700 { color: #34d399 !important; }
+  [data-theme="dark"] .text-green-600 { color: #34d399 !important; }
+
+  /* Dark mode: blue section */
+  [data-theme="dark"] .bg-blue-100 { background-color: rgba(96, 165, 250, 0.10) !important; }
+  [data-theme="dark"] .text-blue-700 { color: #60a5fa !important; }
+  [data-theme="dark"] .text-blue-600 { color: #60a5fa !important; }
+
+  /* Dark mode: indigo */
+  [data-theme="dark"] .bg-indigo-50 { background-color: rgba(99, 102, 241, 0.10) !important; }
+  [data-theme="dark"] .text-indigo-600 { color: #818cf8 !important; }
+  [data-theme="dark"] .text-indigo-700 { color: #818cf8 !important; }
+  [data-theme="dark"] .text-indigo-500 { color: #818cf8 !important; }
+  [data-theme="dark"] .bg-indigo-500 { background-color: #6366f1 !important; }
+  [data-theme="dark"] .hover\:bg-indigo-600:hover { background-color: #4f46e5 !important; }
+  [data-theme="dark"] .bg-indigo-700 { background-color: #4338ca !important; }
+
+  /* Dark mode: purple */
+  [data-theme="dark"] .bg-purple-50 { background-color: rgba(139, 92, 246, 0.08) !important; }
+  [data-theme="dark"] .text-purple-600 { color: #a78bfa !important; }
+
+  /* Dark mode: select/input elements */
+  [data-theme="dark"] input,
+  [data-theme="dark"] textarea,
+  [data-theme="dark"] select {
+    background-color: var(--color-surface-input);
+    color: var(--color-content);
+    border-color: var(--color-border-strong);
+    color-scheme: dark;
+  }
+
+  /* ── Date input: themed calendar icon (light mode) ────────────────────── */
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="time"],
+  input[type="month"] {
+    color-scheme: light;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator,
+  input[type="month"]::-webkit-calendar-picker-indicator {
+    /* Tint the icon to match the primary accent color in light mode */
+    filter: opacity(0.5);
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 4px;
+    transition: filter 150ms ease, opacity 150ms ease;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator:hover,
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover,
+  input[type="time"]::-webkit-calendar-picker-indicator:hover {
+    filter: opacity(0.85);
+  }
+
+  /* ── Dark mode: Fix calendar / datetime-local icon visibility ──────────── */
+  /* Setting color-scheme: dark forces the browser to render the native      */
+  /* picker controls in a light/visible color on dark backgrounds.           */
+  [data-theme="dark"] input[type="date"],
+  [data-theme="dark"] input[type="datetime-local"],
+  [data-theme="dark"] input[type="time"],
+  [data-theme="dark"] input[type="month"] {
+    color-scheme: dark;
+    background-color: var(--color-surface-input);
+    color: var(--color-content);
+    border-color: var(--color-border-strong);
+  }
+
+  /* Force calendar picker indicator to be visible against dark backgrounds */
+  [data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator,
+  [data-theme="dark"] input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+  [data-theme="dark"] input[type="time"]::-webkit-calendar-picker-indicator,
+  [data-theme="dark"] input[type="month"]::-webkit-calendar-picker-indicator {
+    /* invert makes the icon white/light, then tint toward accent color */
+    filter: invert(0.8) sepia(0.3) saturate(3) hue-rotate(200deg) brightness(1.1);
+    cursor: pointer;
+    opacity: 0.75;
+    padding: 2px;
+    border-radius: 4px;
+    transition: opacity 150ms ease, filter 150ms ease;
+  }
+
+  [data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator:hover,
+  [data-theme="dark"] input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover,
+  [data-theme="dark"] input[type="time"]::-webkit-calendar-picker-indicator:hover,
+  [data-theme="dark"] input[type="month"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+    filter: invert(0.85) sepia(0.4) saturate(4) hue-rotate(200deg) brightness(1.2);
+  }
+
+  /* ── Date input wrapper utility ─────────────────────────────────────────── */
+  /* Wrap date inputs in .date-input-wrapper to get themed icon + focus ring */
+  .date-input-wrapper {
+    position: relative;
+  }
+  .date-input-wrapper input[type="date"],
+  .date-input-wrapper input[type="datetime-local"] {
+    width: 100%;
+  }
+
+  /* Dark mode: Quick Picks chip backgrounds */
+  [data-theme="dark"] .chip-unselected {
+    background-color: var(--color-surface-overlay);
+    border-color: var(--color-border-strong);
+    color: var(--color-content-secondary);
+  }
+  [data-theme="dark"] .chip-selected {
+    background-color: var(--color-primary-muted);
+    border-color: var(--color-primary-border);
+    color: var(--color-primary);
+  }
+
+  /* Dark mode: gradient hero */
+  [data-theme="dark"] .gradient-hero {
+    background: linear-gradient(135deg, #4338ca 0%, #6d28d9 50%, #7c3aed 100%);
+  }
+
+  /* Dark mode: empty card */
+  [data-theme="dark"] .empty-card {
+    background: linear-gradient(145deg, var(--color-surface-elevated), var(--color-surface));
+    border-color: var(--color-border-strong);
+  }
+
+  /* Dark mode: diagnostics amber card */
+  [data-theme="dark"] .bg-amber-50.border-amber-200 {
+    background-color: rgba(251, 191, 36, 0.06) !important;
+  }
+
+  /* Dark mode: table rows */
+  [data-theme="dark"] .hover\:bg-gray-50\/50:hover { background-color: rgba(255, 255, 255, 0.03) !important; }
+  [data-theme="dark"] .bg-gray-900 { background-color: var(--color-surface-elevated) !important; }
+  [data-theme="dark"] .hover\:bg-gray-50:hover { background-color: var(--color-surface-overlay) !important; }
+  [data-theme="dark"] .bg-gray-100 { background-color: var(--color-surface-overlay) !important; }
+  [data-theme="dark"] .text-gray-800 { color: var(--color-content) !important; }
+  [data-theme="dark"] .text-gray-200 { color: var(--color-content-secondary) !important; }
+
+  /* Dark mode: today card accent glows (more visible in dark) */
+  [data-theme="dark"] .today-card-danger:hover {
+    box-shadow: var(--shadow-card-hover), 0 0 20px rgba(248, 113, 113, 0.12), 0 0 0 1px rgba(248, 113, 113, 0.2);
+  }
+  [data-theme="dark"] .today-card-warning:hover {
+    box-shadow: var(--shadow-card-hover), 0 0 20px rgba(251, 191, 36, 0.12), 0 0 0 1px rgba(251, 191, 36, 0.2);
+  }
+  [data-theme="dark"] .today-card-info:hover {
+    box-shadow: var(--shadow-card-hover), 0 0 20px rgba(96, 165, 250, 0.12), 0 0 0 1px rgba(96, 165, 250, 0.2);
+  }
+  [data-theme="dark"] .today-card-success:hover {
+    box-shadow: var(--shadow-card-hover), 0 0 20px rgba(52, 211, 153, 0.12), 0 0 0 1px rgba(52, 211, 153, 0.2);
+  }
+
+  /* Dark mode: empty card enhanced */
+  [data-theme="dark"] .empty-card {
+    background: linear-gradient(145deg, #1a1a22, #13131a);
+    border-color: #2a2a35;
+  }
+
+  /* Dark mode: template cards in follow-up modal */
+  [data-theme="dark"] .template-card {
+    background-color: var(--color-surface-overlay);
+    border-color: var(--color-border-strong);
+  }
+  [data-theme="dark"] .template-card:hover {
+    border-color: var(--color-primary-border);
+    box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.15);
+  }
+
+  /* Dark mode: priority badge gradients */
+  [data-theme="dark"] .priority-high {
+    background: linear-gradient(135deg, rgba(248, 113, 113, 0.15), rgba(248, 113, 113, 0.08));
+    border-color: rgba(248, 113, 113, 0.25);
+    color: #f87171;
+  }
+  [data-theme="dark"] .priority-medium {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(251, 191, 36, 0.08));
+    border-color: rgba(251, 191, 36, 0.25);
+    color: #fbbf24;
+  }
+  [data-theme="dark"] .priority-low {
+    background: linear-gradient(135deg, rgba(52, 211, 153, 0.15), rgba(52, 211, 153, 0.08));
+    border-color: rgba(52, 211, 153, 0.25);
+    color: #34d399;
+  }
+}

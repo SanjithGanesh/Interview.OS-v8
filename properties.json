@@ -1,0 +1,37 @@
+{
+  "shapeId": "shape:interview-os-hETkDVBo8-7S-s3uYhsr9",
+  "widgetId": "shape:interview-os-hETkDVBo8-7S-s3uYhsr9",
+  "templateHandle": "interview-os",
+  "templateName": "Interview.Os",
+  "icon": {
+    "type": "react-icon",
+    "value": "Fi:FiBookOpen"
+  },
+  "position": {
+    "x": 209.2180120711938,
+    "y": 200.7519210012335
+  },
+  "size": {
+    "w": 1112.5112781954886,
+    "h": 694.1954887218047
+  },
+  "rotation": 0,
+  "opacity": 1,
+  "isLocked": false,
+  "color": "black",
+  "zoomScale": 1,
+  "isFullscreen": false,
+  "savedContentHash": "16a7ewu",
+  "templateDescription": "Collaborate on projects with real-time document editing, version history, and integrated task management",
+  "templateCategory": "General",
+  "meta": {
+    "justCreated": false,
+    "createdAt": 1771465638793,
+    "dockOrder": 17,
+    "showDefaultHandles": false,
+    "buildError": null
+  },
+  "parentId": "page:eYJpP-h8CZbOvvrpLCmVK",
+  "index": "b1I16t8nV",
+  "lastChangedClock": 10206
+}
